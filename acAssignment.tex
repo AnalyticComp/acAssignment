@@ -1,0 +1,809 @@
+%% acAssignment.tex
+%% Copyright 2021 Lukas Schmelzeisen
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The current maintainer of this work is Lukas Schmelzeisen.
+%
+% This work consists of the files acAssignment.cls and acAssignment.tex and
+% bundled example files.
+
+
+% Enable warnings about problematic code
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass{acAssignment}
+
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+
+\newcommand*{\printOption}[1]{\texttt{\textcolor{acBlue}{#1}}}
+\newcommand*{\defOption}[1]{\paragraph{\printOption{#1}}\label{option-#1}}
+\newcommand*{\refOption}[1]{\hyperref[option-#1]{\printOption{#1}}}
+\newcommand*{\printCmd}[1]{\texttt{\textcolor{acBlue}{\textbackslash{}#1}}}
+\newcommand*{\defCmd}[2]{\paragraph{\printCmd{#1}#2}\label{cmd-#1}}
+\newcommand*{\refCmd}[1]{\hyperref[cmd-#1]{\printCmd{#1}}}
+\newcommand*{\placeholder}[1]{$\langle${\normalfont\emph{#1}}$\rangle$}
+\newcommand*{\mArg}[1]{\texttt{\{\placeholder{#1}\}}}
+\newcommand*{\oArg}[1]{\texttt{[\placeholder{#1}]}}
+\newcommand*{\defEnviron}[2][\dots]{\paragraph{\texttt{%
+    \textbackslash{}begin\{\textcolor{acBlue}{#2}\}%
+    \ #1\ %
+    \textbackslash{}end\{\textcolor{acBlue}{#2}\}}}%
+    \label{environ-#2}}%
+\newcommand*{\refEnviron}[1]{\hyperref[environ-#1]{\texttt{#1}}}
+
+\lstset{
+    language=Tex,
+    style=numbered,
+    escapechar=\&,
+    morekeywords={
+        acBibliographyResource,
+        acCourse,
+        acSemester,
+        acAssignmentNumber,
+        acAssignmentTitle,
+        acAuthor,
+        acTask,
+        acUrlFootnote,
+        autocite,
+        begin,
+        caption,
+        clearpage,
+        Comment,
+        documentclass,
+        Else,
+        EndIf,
+        If,
+        includegraphics,
+        kilo,
+        label,
+        LaTeX,
+        lightrulewidth,
+        LineComment,
+        maketitle,
+        mathrm,
+        meter,
+        num,
+        rule,
+        section,
+        selectlanguage,
+        SI,
+        State,
+        textcite,
+        textcolor,
+        textwidth,
+        url,
+    }}
+
+\acCourse[https://github.com/analyticcomp/ac-assignment]
+    {The acAssignment LaTeX class}
+\acAssignmentTitle{Document class for assignments and exams of the Analytic Computing group}
+\acHeader{The acAssignment LaTeX class}
+
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Schmelzeisen/]
+    {Lukas Schmelzeisen}{lukas.schmelzeisen@ipvs.uni-stuttgart.de}
+    
+\acBibliographyResource{example-bibliography.bib}
+
+\begin{document}
+\maketitle
+
+\begin{multicols}{2}
+    \tableofcontents
+\end{multicols}
+
+\vfill
+
+\copyright~2021 Lukas Schmelzeisen
+
+This work may be distributed and/or modified under the of the \acUrlFootnote{https://www.latex-project.org/lppl/}{LaTeX Project Public License}, either version 1.3 of this license or (at your option) any later version.
+The latest version of this license is in \url{http://www.latex-project.org/lppl.txt} and version 1.3 or later is part of all distributions of LaTeX version 2005/12/01 or later.
+
+This work has the LPPL maintenance status ``maintained''.
+
+The current naintainer of this work is Lukas Schmelzeisen.
+
+This work consists of the files \texttt{acAssignment.cls} and \texttt{acAssignment.tex} and bundled example files.
+
+{\hfuzz=31pt
+The latest version of this class should always be available at \url{https://github.com/analyticcomp/ac-assignment}.
+\par}
+
+
+% ------------------------------------------------------------------------------
+\section{About}
+\label{sec:about}
+
+The file \texttt{acAssignment.cls} provides the \texttt{acAssignment} document class for assignments and exams of the \href{https://www.ipvs.uni-stuttgart.de/departments/ac/}{Analytic Computing} group.
+In detail, the following features are provided:
+
+\begin{itemize}
+    \item Setting of page and text style.
+    \item Convenient assignment of point values for each task with automatic summation per task section.
+    \item Automatic detection and numbering of task sections.
+    \item Automatic cover sheet generation, including hyperlinked course and author metadata, and task lists or grading tables for assignments or exams, respectively.
+    \item Control for printing or suppressing reference solutions.
+    \item Instructions on how to author tasks in \LaTeX.
+\end{itemize}
+
+
+% ------------------------------------------------------------------------------
+\section{Class Usage}
+\label{sec:usage}
+
+This documentation assumes a basic understanding of \LaTeX\ and its most common commands.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Usage Example}
+\label{subsec:example}
+
+Taking a look at the bundled examples documents is highly recommended.
+
+They all follow the same rough structure:
+
+\begin{lstlisting}
+\documentclass[solution]{acAssignment}&\label{line:usage-documentclass}&
+
+\acCourse{My Course}&\label{line:usage-metadata-begin}&
+\acSemester{WS~20/21}
+\acAssignmentNumber{1}
+\acAssignmentTitle{My First Assignment}
+\acAuthor{John Doe}{john.doe@ipvs.uni-stuttgart.de}&\label{line:usage-metadata-end}&
+
+\begin{document}
+\maketitle&\label{line:usage-maketitle}&
+
+\section{My first task}&\label{line:usage-section-begin}&
+
+\acTask{5}: Description of first subtask worth five points.
+
+\acTask{2}: Description of second subtask worth two points.
+
+\begin{acSolution}&\label{line:usage-solution-begin}&
+    Reference solution for above tasks.
+\end{acSolution}&\label{line:usage-solution-end}\label{line:usage-section-end}&
+
+\end{document}
+\end{lstlisting}
+
+At the start, in \cref{line:usage-documentclass}, with \texttt{\textbackslash{}documentclass[\dots]\{acAssignment\}} we declare that we want to use this class.
+We further use the \texttt{solution} option to include the reference solution in the PDF output.
+All possible options are documented in \nameref{subsec:options}.
+
+Next, in \crefrange{line:usage-metadata-begin}{line:usage-metadata-end}, we specify document metadata.
+Note that we do not use the regular \LaTeX\ commands \texttt{\textbackslash{}title} and \texttt{\textbackslash{}author}, but instead our own alternatives.
+These are documented in \nameref{sec:metadata}.
+
+In \cref{line:usage-maketitle}, we use a redefined \refCmd{maketitle} command to generate a \nameref{subsec:cover}.
+
+The actual content of the document is then defined in \crefrange{line:usage-section-begin}{line:usage-section-end}.
+Note that we use a regular \refCmd{section} command to declare our section title.
+However, inside of the section, we use the \refCmd{acTask} command to specify subtasks worth specific amounts of points.
+In the output, the point amounts are automatically summed and appended to the section title.
+The structuring of tasks is documented in \nameref{subsec:structuring} and the assigning of points in \nameref{subsec:points}.
+
+Finally, in \crefrange{line:usage-solution-begin}{line:usage-solution-end}, we specify a reference solution for our declared task.
+This is documented in \nameref{subsec:solutions}.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\clearpage
+\subsection{Class Options}
+\label{subsec:options}
+
+You may specify any of the following class options in place of \placeholder{options} when loading the class as \texttt{\textbackslash{}\textbf{documentClass}[\placeholder{options}]\{acAssignment\}}.
+If you specify multiple, separate them by comma.
+If you specify an unknown class option, an error will be raised.
+
+\defOption{german}
+The default document language is English.
+This option instead changes it to German and will automatically translate all strings generated by class commands in the output.
+
+\defOption{exam}
+By default documents are treated as assignments.
+This option instead indicates that the document is an exam.
+This doesn't do much by itself, but enables the use of \nameref{subsec:exam-metadata}.
+
+\defOption{sectionseven}
+By default, sections are printed on the next page.
+This option instead changes this behavior so that sections will only start on even pages.
+This is intended to be used for \refOption{exam}s, because if printed double-sided with pages stapled together it will result in each task section being visible as the two open pages, reducing the needs of students to flip pages.
+
+\defOption{solution}
+By default, the printing of \nameref{subsec:solutions} is supressed.
+This option instead indicates that solution should be printed and indicates on the cover sheet and in headlines that this document is a reference solution.
+
+
+% ------------------------------------------------------------------------------
+\section{Metadata}
+\label{sec:metadata}
+
+You may use the following commands in the document's preamble to specify metadata.
+While you should strive to provide as much metadata as possible, everything should still work if something is omitted.
+
+Specified metadata will show up on the generated \nameref{subsec:cover}, in headlines, and in the metadata of the resulting PDF file.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{General Metadata}
+\label{subsec:general-metadata}
+
+\defCmd{acAuthor}{\oArg{url}\mArg{name}\mArg{email}}
+Adds an author to the list of authors.
+Each author must have a \placeholder{name} and an \placeholder{email} address.
+Optionally, you may specify a \placeholder{url} that should point to the author's profile page on the \href{https://www.ipvs.uni-stuttgart.de/departments/ac/}{Analytic Computing website}.
+For multiple authors, use this command multiple times.
+Do not use the regular \LaTeX\ command \texttt{\textbackslash{}author} and do not separate authors with \texttt{\textbackslash{}and}.
+
+\defCmd{acCourse}{\oArg{url}\mArg{title}}
+Specify the course \placeholder{title} of this assignment or exam. Optionally, you may specify an \placeholder{url} that should point to a web page where more information on the course is available.
+Do not use the regular \LaTeX\ command \texttt{\textbackslash{}title}.
+
+{\hfuzz=31pt
+\defCmd{acSemester}{\mArg{semester}}
+Specify the \placeholder{semester} of the course. 
+Use this with something like \enquote{\texttt{WS\textasciitilde20/21}}.
+\par}
+
+\defCmd{acHeader}{\mArg{header}}
+By default, a sensible headline is generated based on all other document metadata.
+If the generated one is not fitting, you may overwrite it with this command.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Assignment Metadata}
+\label{subsec:assignment-metadata}
+
+The following commands can only be used in assignment mode, i.\,e., when the \refOption{exam} class option is not used.
+
+\defCmd{acAssignmentNumber}{\mArg{number}}
+Specify the consecutive \placeholder{number} of this assignment.
+
+\defCmd{acAssignmentTitle}{\mArg{title}}
+Specify the \placeholder{title} of this assignment.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Exam Metadata}
+\label{subsec:exam-metadata}
+
+The following commands can only be used in exam mode, i.\,e., only when the \refOption{exam} class option is used.
+
+\defCmd{acExamType}{\mArg{type}}
+Specify the \placeholder{type} of the exam.
+This is a free-text field, but you probably only want to use \enquote{Main Exam}, \enquote{Retake Exam}, or \enquote{Trial Exam}.
+The German equivalents are \enquote{\begin{otherlanguage}{ngerman}Hauptklausur\end{otherlanguage}}, \enquote{\begin{otherlanguage}{ngerman}Nachklausur\end{otherlanguage}}, and \enquote{\begin{otherlanguage}{ngerman}Probeklausur\end{otherlanguage}}, respectively.
+
+\defCmd{acExamDate}{\mArg{date}}
+Specify the \placeholder{date} of the exam as free-text, e.\,g., \enquote{\texttt{26\textasciitilde{}July\textasciitilde{}2017}}.
+
+
+% ------------------------------------------------------------------------------
+\section{Authoring Tasks}
+\label{sec:tasks}
+
+This class is designed so that authoring tasks is mostly conventional \LaTeX\ commands.
+This section aims to serve as a reference on any added functionality and as guide on how to build the most common assignment elements.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Cover Sheet}
+\label{subsec:cover}
+
+\defCmd{maketitle}{}
+You should call this command directly after \texttt{\textbackslash{}begin\{document\}}.
+It will generate a cover sheet including all specified \nameref{sec:metadata}.
+If you want to include additional content on the cover sheet just write it after \refCmd{maketitle} and before the first \refCmd{section}.
+Most probably, you will want to use any of the other commands in this subsection here.
+
+\defCmd{acNumTasks}{}
+A command that simply expands to the number of tasks in this document.
+To be specific, a task here counts as a \refCmd{section} that includes at least one \refCmd{acTask} command.
+
+\defCmd{acNumPages}{}
+A command that simply expands to the number of pages of this document.
+
+{\hfuzz=31pt
+\defCmd{acListOfTasks}{}
+Generates a hyperlinked list of all tasks (i.\,e., \refCmd{section}s with at least one \refCmd{acTask} call).
+\par}
+
+\defCmd{acExamForm}{}
+Generates a form that is typically used at the beginning of an \refOption{exam}.
+Is composed of a section where the student will have to enter their personal details and a grading table that automatically includes all tasks (i.\,e., \refCmd{section}s with at least one \refCmd{acTask} call) of the document.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Structuring Tasks}
+\label{subsec:structuring}
+
+To structure your document, use the regular \LaTeX\ sectioning commands:
+
+\defCmd{section}{\oArg{title-toc}\mArg{title}}~
+
+\defCmd{subsection}{\oArg{title-toc}\mArg{title}}~
+
+\vspace{0.2cm}
+These will automatically be recognize if you \hyperref[subsec:points]{assign point values} inside of them, i.\,e., use the \refCmd{acTask} command at least once.
+In this case, a consecutive number will automatically be prepended and a sum of all achievable points will be appended to them.
+The title of the section is given by \placeholder{title}.
+You can use \placeholder{toc-title} if you want to assign a shorter title for \refCmd{acListOfTasks} or the table of contents generated in the PDF metadata (useful, when you want to have math commands inside of your titles, which would otherwise result in warnings because these can't be exported to PDF metadata).
+
+\defCmd{part}{\oArg{title-toc}\mArg{title}}
+Used to split the document into multiple parts.
+Intended for \refOption{exam}s which want to separate tasks, e.\,g., into tasks that can be solved without aids and tasks that can be solved with aids.
+
+\vspace{0.2cm}
+Starred version of all these commands (e.\,g., \refCmd{section}\texttt{*}) are available but not functionally different from their unstarred counterparts, in contrast to the standard \LaTeX\ classes \texttt{article}, \texttt{report}, \texttt{book}, etc.
+
+In cases where you want to group multiple sequential steps or subdivide a task further than \refCmd{subsection}, use (nested) enumerations.
+For example:
+
+\begin{lstlisting}
+\section{My Task Section}
+
+\subsection{My Task Subsection}
+
+\begin{enumerate}
+    \item \acTask{5}: First step of subtask.
+    \item \acTask{2}: Second step of subtask.
+\end{enumerate}
+\end{lstlisting}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{In-Document References}
+\label{subsec:references}
+
+You can use \texttt{\textbackslash{}label} on all \refCmd{section}s, \refCmd{subsection}s, \refCmd{part}s, and \texttt{\textbackslash{}item}s of enumerations and reference them from elsewhere just like you would expect.
+
+The following commands are provided through the \href{https://ctan.org/pkg/hyperref}{hyperref} and \href{https://ctan.org/pkg/cleveref}{cleveref} packages:
+
+\begin{itemize}
+    \item \texttt{\textbackslash{}cref\{\placeholder{label}\}}\quad
+        to reference \placeholder{label} and automatically use the correct referencing text, e.\,g., \enquote{Task} or \enquote{Equation}.
+        At the start of a sentence, use \texttt{\textbackslash{}Cref} instead.
+    \item \texttt{\textbackslash{}nameref\{\placeholder{label}\}}\quad
+        to reference a section with \placeholder{label} automatically by its name.
+    \item \texttt{\textbackslash{}hyperref[\placeholder{label}]\{\placeholder{text}\}}\quad
+        to reference \placeholder{label} with \placeholder{text}.
+\end{itemize}
+
+Of course, \texttt{\textbackslash{}label}-ing and referencing \nameref{subsec:math} equations, \nameref{subsec:figures}, \nameref{subsec:tables}, \nameref{subsec:pseudocode}, and \nameref{subsec:listings} also works as expected.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Assigning Point Values}
+\label{subsec:points}
+
+\defCmd{acTask}{\oArg{point-description}\mArg{points}}
+Defines a task that is worth \placeholder{points} many points.
+The \placeholder{points} amounts are included in \refCmd{section} and \refCmd{subsection} titles and included in \refCmd{acExamForm}'s grading table.
+
+\vspace{0.2cm}
+Intended use is as follows:
+
+\begin{lstlisting}
+Description of the task setting.
+
+\acTask{5}: Description of the task in the setting worth five points.
+
+\acTask{2}: Description of the another task in the setting worth two points.
+\end{lstlisting}
+
+The idea is to split larger tasks into multiple smaller \refCmd{acTask} calls, to make it clearly evident what the students need to do and how many points are awarded for what.
+
+Sometimes you might want to assign points more fine grained than possible with this approach.
+In those cases, you can use \placeholder{point-description} like this:
+
+\begin{lstlisting}
+\acTask[0.5 Points each]{1.5}: Proof each of the following equalities:
+
+\begin{enumerate}
+    \item &\$&(a + b)^2 = a^2 + 2\,a\,b + b^2&\$&
+    \item &\$&(a - b)^2 = a^2 - 2\,a\,b + b^2&\$&
+    \item &\$&(a + b)\,(a - b) = a^b - b^2&\$&
+\end{enumerate}
+\end{lstlisting}
+
+\defCmd{acTask*}{\mArg{points}}
+Works similar to \refCmd{acTask}, but has not direct output, i.\,e., does not print the \enquote{Task (\placeholder{points} points)} text.
+Use this in cases, where you want to manually write in text which subtask is worth how many points.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Leaving Space for Answers}
+\label{subsec:answer-space}
+
+When authoring \refOption{exam}s, one usually wants to leave space for the answers directly under the questions.
+Use the \texttt{\textbackslash{}vfill} command to dynamically use all available space, like so:
+
+\begin{lstlisting}
+\section{My Task}
+
+\acTask{5}: Description of first task.
+
+\vfill
+\vfill
+
+\acTask{2}: Description of second task.
+
+\vfill
+
+\clearpage
+\end{lstlisting}
+
+This will use two thirds of the empty page for the first task, and one third for the second task.
+
+\defCmd{acBlankPages}{\mArg{count}}
+Use this command to include \placeholder{count} many blank pages at the end of the document.
+This should be used with \refOption{exam}s, so that students have some alternative option if they run out of space on the page of the respective task.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Solutions}
+\label{subsec:solutions}
+
+\defEnviron[\placeholder{solution}]{acSolution}
+Prints \placeholder{solution} if the \refOption{solution} class option is given and nothing otherwise.
+The solution is automatically colored as \href{subsec:colors}{\texttt{acSolution}}.
+
+\defCmd{acInlineSolution}{\mArg{solution}}
+Prints \placeholder{solution} if the \refOption{solution} class option is given and nothing otherwise.
+The solution is automatically colored as \href{subsec:colors}{\texttt{acSolution}}.
+
+\defCmd{acIfSolution}{\mArg{if-solution}\mArg{if-not-solution}}
+Expands to \placeholder{if-solution} if the \refOption{solution} class option is given and to \placeholder{if-not-solution} otherwise.
+This is a low level command, and probably less useful than the other two solution commands in most scenarios.
+This does not automatically apply the \href{subsec:colors}{\texttt{acSolution}} color, so if desired you will need to do this by hand.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Multiple Choice Questions}
+\label{subsec:multiple-choice}
+
+\defEnviron{acMultipleChoice}
+Starts a new block of multiple choice questions.
+The actual questions are generated with \refCmd{acChoice}, which is also the only command that may be nested directly inside of this environment.
+
+\defCmd{acChoice}{\oArg{first-answer}\oArg{second-answer}\oArg{points}\mArg{question}
+}
+Defines a new binary \placeholder{question} inside of a \refEnviron{acMultipleChoice} block with checkboxes \placeholder{first-answer} (default: \enquote{True}) and \placeholder{second-answer} (default: \enquote{False}).
+Answering the question will be worth \placeholder{points} \hyperref[subsec:points]{points} (default: 1~point).
+By default, the first answer option is marked as correct in the reference \refOption{solution}.
+To mark the second answer option as correct, use \refCmd{acChoice}\texttt{*} instead.
+
+\vspace{0.2cm}
+Multiple choice questions with more than two answers are not yet supported.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Math}
+\label{subsec:math}
+
+Besides the \href{https://ctan.org/pkg/amsfonts}{amssymb} and \href{https://ctan.org/pkg/mathtools}{mathtools} packages being loaded by default, everything should be the same as in most other \LaTeX\ documents.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Figures}
+\label{subsec:figures}
+
+Figures should work as you expect them to.
+As usual, use the \texttt{\textbackslash{}includegraphics} command (shown below) of the \href{https://ctan.org/pkg/graphicx}{graphicx} package to include images.
+
+For floats, it is often useful to use the \texttt{[H]} option, to print figures at the current position in the document:
+
+\begin{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=2cm]{assets/logo-ac}
+    \caption{An example figure.}
+\end{figure}
+\end{lstlisting}
+
+Which results in:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=2.5cm]{assets/logo-ac}
+    \caption{An example figure.}
+\end{figure}
+
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Tables}
+\label{subsec:tables}
+
+The \href{https://ctan.org/pkg/booktabs}{booktabs} package can be used to print aesthetically pleasing tables:
+
+\begin{lstlisting}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llS}
+        \toprule
+        \multicolumn{2}{c}{\textbf{Item}} &\&& \\
+        \cmidrule{1-2}
+        \textbf{Animal} &\&& \textbf{Description} &\&& \textbf{Price (\&\$&)} \\
+        \midrule
+        Gnat      &\&& per gram &\&& 13.65 \\
+                  &\&& each     &\&&  0.01 \\
+        Gnu       &\&& stuffed  &\&& 92.5 \\
+        Emu       &\&& stuffed  &\&& 33 \\
+        Armadillo &\&& frozen   &\&&  8.99 \\
+        \bottomrule
+    \end{tabular}
+    \caption{An example table.}
+    \label{tab:sample-tab}
+\end{table}
+\end{lstlisting}
+
+\clearpage
+Which results in:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llS}
+        \toprule
+        \multicolumn{2}{c}{\textbf{Item}} & \\
+        \cmidrule{1-2}
+        \textbf{Animal} & \textbf{Description} & \textbf{Price (\$)} \\
+        \midrule
+        Gnat      & per gram & 13.65 \\
+                  & each     &  0.01 \\
+        Gnu       & stuffed  & 92.5 \\
+        Emu       & stuffed  & 33 \\
+        Armadillo & frozen   &  8.99 \\
+        \bottomrule
+    \end{tabular}
+    \caption{An example table.}
+    \label{tab:sample-tab}
+\end{table}
+
+Note how we used the \texttt{S} column type of the \href{https://ctan.org/pkg/siunitx}{siunitx} package, to align numbers in the column.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Pseudo Code}
+\label{subsec:pseudocode}
+
+The \href{https://ctan.org/pkg/algorithms}{algorithms} and \href{https://ctan.org/pkg/algorithmicx}{algorithmicx} packages can be used to print pseudo code:
+
+\begin{lstlisting}
+\begin{algorithm}
+    \caption{An example algorithm.}
+    \label{alg:sample-alg}
+    \begin{algorithmic}[1]
+        \LineComment{A comment on its own line.}
+        \If{&\$&i \geq \mathrm{maxval}&\$&}
+            \State &\$&i\gets 0&\$& \Comment{A comment after a statement.}
+        \Else
+            \If{&\$&i+k \leq \mathrm{maxval}&\$&}
+                \State &\$&i\gets i+k&\$&
+            \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+\end{lstlisting}
+
+Which results in:
+
+\begin{algorithm}
+    \caption{An example algorithm.}
+    \label{alg:sample-alg}
+    \begin{algorithmic}[1]
+        \LineComment{A comment on its own line.}
+        \If{$i \geq \mathrm{maxval}$}
+            \State $i\gets 0$ \Comment{A comment after a statement.}
+        \Else
+            \If{$i+k \leq \mathrm{maxval}$}
+                \State $i\gets i+k$
+            \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\clearpage
+\subsection{Code Listings}
+\label{subsec:listings}
+
+The \href{https://ctan.org/pkg/listings}{listings} package can be used to print code listings:
+
+\begin{lstlisting}
+\begin{lstlisting}[
+    language=Python,
+    style=numbered,
+    caption={An example listing.}]
+def print_sum(num1, num2):
+    # Simple function to print a sum.
+    print(f"The sum of {num1} and {num2} is {num1 + num2}.")
+
+print_sum(1.5, 6.3)
+\end&&{lstlisting}
+\end{lstlisting}
+
+Which results in:
+
+\begin{lstlisting}[
+    language=Python,
+    style=numbered,
+    caption={An example listing.}]
+def print_sum(num1, num2):
+    # Simple function to print a sum.
+    print(f"The sum of {num1} and {num2} is {num1 + num2}.")
+
+print_sum(1.5, 6.3)
+\end{lstlisting}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Citations}
+\label{subsec:citations}
+
+\defCmd{acBibliographyResrouces}{\mArg{bib-file}}
+Use this command if you want to include bibliographic citations from a given \placeholder{bib-file} in your document.
+This loads the \href{https://ctan.org/pkg/biblatex}{biblatex} package on demand.
+
+As no bibliography is printed at the end of the document, use the \texttt{\textbackslash{}textcite} and \texttt{\textbackslash{}autocite} commands of \href{https://ctan.org/pkg/biblatex}{biblatex} like so to print references in footnotes:
+
+\begin{lstlisting}
+% In the preamble:
+\acBibliographyResource{example-bibliography.bib}
+
+% In the text:
+\textcite{DBLP:books/lib/MittelbachGB04} is a good introduction into \LaTeX.
+However, is has been shown that it is not always secure to execute untrusted
+\LaTeX\ code\autocite{DBLP:conf/leet/CheckowaySR10}.
+\end{lstlisting}
+
+Which results in:
+\textcite{DBLP:books/lib/MittelbachGB04} is a good introduction into \LaTeX.
+However, is has been shown that it is not always secure to execute untrusted \LaTeX\ code\autocite{DBLP:conf/leet/CheckowaySR10}.
+
+If available, it is a good idea to include the \texttt{url} attribute in bibliography entry in the \texttt{.bib} file, as it is used to hyperlink the citations title.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\clearpage
+\subsection{Colors}
+\label{subsec:colors}
+
+The \href{https://ctan.org/pkg/xcolor}{xcolor} package is used to define the following color names:
+
+{\ttfamily\hfill%
+\textcolor{acGray}{\rule{6pt}{6pt}~acGray}\hfill%
+\textcolor{acBlue}{\rule{6pt}{6pt}~acBlue}\hfill%
+\textcolor{acLightBlue}{\rule{6pt}{6pt}~acLightBlue}\hfill%
+\textcolor{acComment}{\rule{6pt}{6pt}~acComment}\hfill%
+\textcolor{acSolution}{\rule{6pt}{6pt}~acSolution}\hfill}%
+
+The first three are from the \href{https://www.beschaeftigte.uni-stuttgart.de/uni-services/oeffentlichkeitsarbeit/corporate-design/#id-93d75c24-head1}{official colors of the university}, whereas the latter are semantic colors chosen to be somewhat aesthetically pleasing in conjunction with them.
+
+To assign a \placeholder{color} to some \placeholder{text}:
+
+\begin{lstlisting}
+\textcolor{&\placeholder{color}&}{&\placeholder{text}&}
+\end{lstlisting}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Language}
+\label{subsec:language}
+
+The default document language is English.
+Use the \refOption{german} class option, if you are writing a document in German.
+
+If you only want to use a second language inside a document, use the commands of the \href{https://ctan.org/pkg/babel}{babel} package:
+
+\begin{itemize}
+    \item To change the language for a specific block of the document:
+    
+        \begin{lstlisting}
+\begin{otherlangauge}{&\placeholder{language}&} &\dots& \end{otherlangauge}
+        \end{lstlisting}
+        
+    \item To change the language for the remainder of the document:
+    
+        \begin{lstlisting}
+\selectlanguage{&\placeholder{language}&}
+        \end{lstlisting}
+\end{itemize}
+
+In place of \placeholder{language}, use either \texttt{ngerman} or \texttt{USenglish}.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Miscellaneous}
+\label{subsec:misc}
+
+\defCmd{acNote}{}
+Prints the text \enquote{Note} in similar style to the \refCmd{acTask} command.
+
+\defCmd{acUrlFootNote}{\mArg{url}\mArg{text}}
+Use this command if you want to link somewhere, but also want to have the link accessible in printed form (as many students print assignment sheets).
+For example:
+
+\begin{lstlisting}
+\acUrlFootnote{https://www.uni-stuttgart.de/en/}{University of Stuttgart}
+\end{lstlisting}
+
+Which results in:
+\acUrlFootnote{https://www.uni-stuttgart.de/en/}{University of Stuttgart}
+
+\paragraph{\href{https://ctan.org/pkg/url}{url} package}
+You can use the \texttt{\textbackslash{}url} command to format and hyperlink URLs:
+
+\begin{lstlisting}
+\url{https://www.uni-stuttgart.de/en/}
+\end{lstlisting}
+
+Which results in: 
+\url{https://www.uni-stuttgart.de/en/}
+
+\clearpage
+\paragraph{\href{https://ctan.org/pkg/csquotes}{csquotes} package}
+You can wrap text in quotation marks using the \texttt{\textbackslash{enquote}} command.
+To print a block quotation use \texttt{\textbackslash{}begin\{quote\} \dots\ \textbackslash{}end\{quote\}}:
+
+\begin{lstlisting}
+% Inline quote
+\enquote{To be or not to be?}
+
+% Block quote
+\begin{quote}
+    To be or not to be?
+\end{quote}
+\end{lstlisting}
+
+Which results in:
+\enquote{To be or not to be?}
+
+\begin{quote}
+    To be or not to be?
+\end{quote}
+
+\paragraph{\href{https://ctan.org/pkg/enumitem}{enumitem} package}
+You can use the \texttt{itemsep} option to increase the spacing of \texttt{\textbackslash{}item}s in \texttt{enumeration} and \texttt{itemize} (mostly useful when including block elements in \texttt{\textbackslash{}item}s, e.\,g., code listings):
+
+\begin{lstlisting}
+\begin{enumerate}[itemsep=0.4cm]
+    \item First item
+    \item Second item
+\end{enumerate}
+\end{lstlisting}
+
+\paragraph{\href{https://ctan.org/pkg/siunitx}{siunitx} package}
+You can use the \texttt{\textbackslash{}num} command to format numbers.
+Additionally, the \texttt{\textbackslash{}SI} macro can be used to format units:
+
+\begin{lstlisting}
+One million in digits is \num{1000000}.
+\SI{6}{\kilo m} equals \SI{1.667}{m}.
+\end{lstlisting}
+
+Which results in:
+One million in digits is \num{1000000}.
+\SI{16}{\kilo m} equals \SI{16000}{m}.
+
+% ------------------------------------------------------------------------------
+\section{Known Bugs}
+\label{sec:bugs}
+
+If you find any bugs in this class, don't hesitate to \href{https://github.com/analyticcomp/acAssignment/issues}{open a GitHub issue}.
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Overfull hbox warnings}
+\label{subsec:overfull-hbox}
+
+In some cases, an \enquote{Overfull \textbackslash{}hbox} warning up to \SI{30}{pt} is generated, even though the respective content is clearly not offending.
+Any warning over \SI{30}{pt} seems to be a correct warning.
+
+One way to reproduce this is via the following (which normally should not trigger that warning):
+
+\begin{lstlisting}
+\rule{\textwidth}{\lightrulewidth}
+\end{lstlisting}
+
+To fix the error adapt it to:
+
+\begin{lstlisting}
+{\hfuzz=31pt
+\rule{\textwidth}{\lightrulewidth}
+\par}
+\end{lstlisting}
+
+Almost certainly, this is caused by some error in using the \href{https://ctan.org/pkg/geometry}{geometry} package.
+For example, the \texttt{\textbackslash{}hrulefill} command prints a rule that stops roughly \SI{30}{pt} before the end of the line.
+
+\end{document}

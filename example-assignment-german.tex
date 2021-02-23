@@ -1,0 +1,451 @@
+%% example-assignment-german.tex
+%% Copyright 2021 Lukas Schmelzeisen
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The current maintainer of this work is Lukas Schmelzeisen.
+%
+% This work consists of the files acAssignment.cls and acAssignment.tex and
+% bundled example files.
+
+% Enable warnings about problematic code
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[german, solution]{acAssignment}
+
+\acCourse[https://west.uni-koblenz.de/studying/ws1920/algorithmen-und-datenstrukturen]
+    {Algorithmen und Datenstrukturen}
+\acSemester{WS~19/20}
+\acAssignmentNumber{3}
+\acAssignmentTitle{O-Notation}
+
+\acAuthor[https://west.uni-koblenz.de/de/about-us/team/matthias-thimm]
+    {PD Matthias Thimm}{thimm@uni-koblenz.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/de/institut/team/Schmelzeisen/]
+    {Lukas Schmelzeisen}{lukas.schmelzeisen@ipvs.uni-stuttgart.de}
+
+\usepackage{array}
+
+\begin{document}
+\maketitle
+
+Dieses Aufgabenblatt besteht aus \acNumPages~Seiten mit den folgenden \acNumTasks~Aufgaben:
+
+\acListOfTasks
+
+Bitte lesen Sie vor Abgabe die \hyperref[sec:submission-notes]{Hinweise zur Abgabe} am Ende des Aufgabenblatts.
+
+\textbf{Die Abgabe ist bis Freitag, 22.~November 2021, 23:59 möglich.}
+
+
+% ------------------------------------------------------------------------------
+\section{Wachstumsverhältnisse zwischen Funktionen}
+
+Die folgende Tabelle ist so zu verstehen: wenn die Funktion $f(n)$ in der
+Spalte $x$ und die Funktion $g(n)$ in der Zeile $y$ stehen, so soll in die Zelle
+$(x,y)$ das Zeichen $\mathcal{A} \in \{\mathcal{O}, \Omega, \Theta\}$ eingetragen
+werden, wenn $f(n) \in \mathcal{A}(g(n))$ gilt.
+($\Theta$ impliziert hierbei $\mathcal{O}$ und $\Omega$.)
+
+\acTask[1 Punkte pro Zeile; pro Fehler 0.5 Punkte Abzug; mindestens 0 Punkte pro Zeile]{4}:
+Füllen Sie die fehlenden Zellen in der Tabelle aus.
+
+\vspace{0.4cm}
+
+\begin{center}
+    \newcommand*\OMI{\acInlineSolution{$\mathcal{O}$}}
+    \newcommand*\OME{\acInlineSolution{$\Omega$}}
+    \newcommand*\THE{\acInlineSolution{$\Theta$}}
+    \let\oldarraystretch\arraystretch
+    \renewcommand*{\arraystretch}{1.5}
+    % See https://tex.stackexchange.com/a/12712/75225
+    \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+    \begin{tabular}{|c|*{6}{C{1.5cm}|}}
+        \cline{2-7}
+        \multicolumn{1}{c|}{} & $1000$ & $\lceil \frac{n}{2} \rceil$ & $\lceil \mathrm{log}(n) \rceil$ & $\lceil \sqrt{n} \rceil$ & $\lceil \frac{4^n}{4} \rceil$ & $5 n^2$ \\
+        \hline
+        $13 n$ & $\mathcal{O}$ & $\Theta$ & \OMI & \OMI & \OME & \OME \\
+        \hline
+        $\lceil \frac{\mathrm{log}(n)}{2} \rceil$ & \OMI & \OME & \THE & \OME & \OME & \OME \\
+        \hline
+        $3 n^2 + 2$ & \OMI & \OMI & \OMI & \OMI & \OME & \THE \\
+        \hline
+        $\lceil e^n \rceil$ & \OMI & \OMI & \OMI & \OMI & \OME & \OMI \\
+        \hline
+    \end{tabular}
+    \let\arraystretch\oldarraystretch
+\end{center}
+
+\vspace{0.4cm}
+
+\acNote:
+Die Gaussklammern $\lceil \,\cdot\, \rceil$ runden ihr Argument immer zur nächst höheren ganzen Zahl auf.
+Zum Beispiel gilt $\lceil 2.1 \rceil = 3$.
+
+
+% ------------------------------------------------------------------------------
+\section{Beziehungen zwischen Aufwandsklassen}
+
+Seien $f$ und $g$ beliebige Funktionen mit $f : \mathbb{N} \to \mathbb{N}$ und $g : \mathbb{N} \to \mathbb{N}$.
+
+\acTask[1~Punkt pro Aussage]{5}:
+Zeigen oder widerlegen Sie die folgenden Aussagen:
+
+\begin{enumerate}
+    \item $f(n) + g(n) \in \Theta(\max(f(n), g(n)))$
+    
+        \begin{acSolution}
+            In der Vorlesung wurde $\Theta(f(n)) = \mathcal{O}(f(n)) \cap \Omega(f(n)$ gezeigt.
+            Damit können wir zu $f(n) + g(n) \in \Theta(\max(f(n), g(n))) = \mathcal{O}(\max(f(n), g(n))) \cap \Omega(\max(f(n), g(n))$ umformen.
+            Damit dies gilt müssen folgende beiden Aussagen gelten:
+            \begin{enumerate}[label=(\arabic*)]
+            \item\label{statement1} $f(n) + g(n) \in \mathcal{O}(\max(f(n), g(n)))$
+            \item\label{statement2} $f(n) + g(n) \in \Omega(\max(f(n), g(n)))$
+            \end{enumerate}
+            Aussage \ref{statement1} wurde in der Vorlesung gezeigt.
+            Aussage \ref{statement2} gilt, da beispielsweise für $c=1$ stets $f(n) + g(n) \geq c \cdot \max(f(n), g(n))$ gilt, da aus $f:\mathbb{N} \to \mathbb{N}$ und $g:\mathbb{N} \to \mathbb{N}$ folgt, dass $f(n) > 0$ und $g(n) > 0$.
+        \end{acSolution}
+    
+    \item $f(n) \in \mathcal{O}(g(n)) \implies g(n) \in \mathcal{O}(f(n))$
+    
+        \begin{acSolution}
+            Gilt nicht, da $0 \in \mathcal{O}(1)$ aber nicht $1 \in \mathcal{O}(0)$, weil für alle $c \in \mathbb{R}^{>0}$ stets $0 \leq c \cdot 1$ gilt, aber es kein $c \in \mathbb{R}^{>0}$ gibt für das $1 \leq c \cdot 0$ gilt.
+        \end{acSolution}
+    
+    \item $f(n) \in \mathcal{O}(g(n)) \implies 2^{f(n)} \in \mathcal{O}(2^{g(n)})$
+    
+        \begin{acSolution}
+            Gilt nicht, da $2 \, n \in \mathcal{O}(n)$ aber nicht $2^{2 \, n} \in \mathcal{O}(2^n)$, weil beispielsweise mit $c = 2$ stets $2 \, n \leq c \cdot n$ gilt, aber es kein fixes $c \in \mathbb{R}^{>0}$ gibt für das gilt
+            \begin{align*}
+                & 2^{2 \, n} \leq c \cdot 2^n \\
+                \iff & 2^n \cdot 2^n \leq c \cdot 2^n \\
+                \iff & 2^n \leq c\\[-1cm]
+            \end{align*}
+        \end{acSolution}
+    
+    \item $f(n) \in \mathcal{O}(g(n)) \lor g(n) \in \mathcal{O}(f(n))$
+    
+        \begin{acSolution}
+            Gilt nicht, beispielsweise gilt $(-1)^n \notin \mathcal{O}(-(-1)^n)$ und $-(-1)^n \notin \mathcal{O}((-1)^n)$, weil es kein fixes $c \in \mathbb{R}^{>0}$ gibt für das $(-1)^n \leq c \cdot -(-1)^n$ oder $-(-1)^n \leq c \cdot (-1)^n$ gilt.
+            
+            Eine anderes Beispiel wären $\mathrm{sin}(x)$ und $\mathrm{cos}(x)$, aber zu Beginn der Aufgaben wurden $f : \mathbb{N} \to \mathbb{N}$ gefordert und die trigonometrischen Funktionen sind in der Regeln nicht nur auf den natürlichen Zahlen definiert (kein Abzug hierfür).
+        \end{acSolution}
+    
+    \item $\mathcal{O}(f(n)) \cap \Omega(f(n)) = \emptyset$
+    
+        \begin{acSolution}
+            Gilt nicht, denn beispielsweise gilt $n \in \mathcal{O}(n) \cap \Omega(n)$, weil $n \in \mathcal{O}(n)$ (weil beispielsweise mit $c=1$ stets $n \leq c \cdot n$ gilt) und $n \in \Omega(n)$ (weil beispielsweise mit $c=1$ stets $n \geq c \cdot n$ gilt).
+            
+            Alternativ: In der Vorlesung wurde $\Theta(n) = \mathcal{O}(n) \cap \Omega(n)$ gezeigt und $\Theta(n) \neq \emptyset$ weil $n \in \Theta(n)$ (weil beispielsweise mit $c_1 = c_2 = 1$ stets $c_1 \cdot n \geq n \geq c_2 \cdot n$ gilt).
+        \end{acSolution}
+\end{enumerate}
+
+
+% ------------------------------------------------------------------------------
+\section{Aufwandsanalyse von Algorithmen}
+
+Gegeben sind einige iterative und rekursive Algorithmen:
+
+\NewEnviron{myAlgTable}[1]{%
+    \textbf{Algorithmus #1}\par%
+        \begin{tabular}{p{2.25cm}p{11.75cm}}%
+            \toprule%
+            \BODY%
+            \bottomrule%
+        \end{tabular}}
+\newcommand*\myAlgTableRow[2]{%
+    \ifstrempty{#1}{}{%
+        $\mathcal{O}\,(\acIfSolution{\,\textcolor{acSolution}{#1}}{}\hfill)$}%
+    &\texttt{#2}\\}
+    
+\let\oldarraystretch\arraystretch
+\renewcommand*{\arraystretch}{1}
+\begin{itemize}[itemsep=0.4cm]
+    \item
+        \begin{myAlgTable}{1}
+            \myAlgTableRow{}{\textbf{void} alg1(\textbf{int} n) \{}
+            \myAlgTableRow{1}{\ \ \textbf{int} j = n * n;}
+            \myAlgTableRow{1}{\ \ \textbf{int} p = 0;}
+            \myAlgTableRow{n^2}{\ \ \textbf{while} (j > 0) \{}
+            \myAlgTableRow{1}{\ \ \ \ \textbf{int} i = 1;}
+            \myAlgTableRow{\log\,n}{\ \ \ \ \textbf{while} (i < n) \{}
+            \myAlgTableRow{1}{\ \ \ \ \ \ p = 2 * j;}
+            \myAlgTableRow{1}{\ \ \ \ \ \ i = i * 2;}
+            \myAlgTableRow{}{\ \ \ \ \}}
+            \myAlgTableRow{1}{\ \ \ \ j = j - 1;}
+            \myAlgTableRow{}{\ \ \}}
+            \myAlgTableRow{}{\}}
+        \end{myAlgTable}
+        
+    \item
+        \begin{myAlgTable}{2}
+            \myAlgTableRow{}{\textbf{void} alg2(\textbf{int} n) \{}
+            \myAlgTableRow{1}{\ \ \textbf{int} m = 0;}
+            \myAlgTableRow{\infty}{\ \ \textbf{for} (\textbf{int} i = 0; i <= n; i = i * 2) \{}
+            \myAlgTableRow{1}{\ \ \ \ \textbf{int} j = 0;}
+            \myAlgTableRow{i}{\ \ \ \ \textbf{while} (j < i) \{}
+            \myAlgTableRow{1}{\ \ \ \ \ \ m = m + 1;}
+            \myAlgTableRow{1}{\ \ \ \ \ \ j = j + 1;}
+            \myAlgTableRow{}{\ \ \ \ \}}
+            \myAlgTableRow{}{\ \ \}}
+            \myAlgTableRow{}{\}}
+        \end{myAlgTable}
+        
+    \item
+        \begin{myAlgTable}{3}
+            \myAlgTableRow{}{\textbf{void} alg3(\textbf{int} n) \{}
+            \myAlgTableRow{1}{\ \ \textbf{int} i = 2;}
+            \myAlgTableRow{n}{\ \ \textbf{while} (i <= n) \{}
+            \myAlgTableRow{1}{\ \ \ \ \textbf{if} (!f(i))}
+            \myAlgTableRow{\log\,n}{\ \ \ \ \ \ \textbf{for} (\textbf{int} j = 1; j <= n; j = j * 2)}
+            \myAlgTableRow{j}{\ \ \ \ \ \ \ \ g(j);}
+            \myAlgTableRow{1}{\ \ \ \ i = i + 1;}
+            \myAlgTableRow{}{\ \ \}}
+            \myAlgTableRow{1}{\ \ i = 0;}
+            \myAlgTableRow{n}{\ \ \textbf{while} (i <= n) \{}
+            \myAlgTableRow{1}{\ \ \ \ h(i);}
+            \myAlgTableRow{1}{\ \ \ \ i = i + 1;}
+            \myAlgTableRow{}{\ \ \}}
+            \myAlgTableRow{}{\}}
+        \end{myAlgTable}
+        
+        Die folgende Tabelle gibt den Aufwand der Unterfunktionen an:
+        \begin{center}
+            \begin{tabular}{cccc}
+                \toprule
+                \textbf{Funktion} & \texttt{f} & \texttt{g} & \texttt{h} \\
+                \midrule
+                \textbf{Aufwand} & konstant & linear & konstant \\
+                \bottomrule
+            \end{tabular}
+        \end{center}
+    
+    \clearpage
+    \item
+        \begin{myAlgTable}{4}
+            \myAlgTableRow{}{\textbf{int} multiplyAllValues(\textbf{ArrayList}<\textbf{Integer}> a,}
+            \myAlgTableRow{}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{ArrayList}<\textbf{Integer}> b) \{}
+            \myAlgTableRow{1}{\ \ \textbf{int} n = a.size();}
+            \myAlgTableRow{1}{\ \ \textbf{int} m = b.size();}
+            \myAlgTableRow{1}{\ \ \textbf{if} (a.isEmpty()) \{}
+            \myAlgTableRow{}{\ \ \ \ \textbf{return} 0;}
+            \myAlgTableRow{}{\ \ \} \textbf{else} \{}
+            \myAlgTableRow{n}{\ \ \ \ \textbf{int} aValue = a.remove(0);}
+            \myAlgTableRow{}{\ \ \ \ \textbf{int} result = multiplyAllValues(a, b);}
+            \myAlgTableRow{m}{\ \ \ \ \textbf{for} (\textbf{int} i = 0; i != m; ++i) \{}
+            \myAlgTableRow{1}{\ \ \ \ \ \ \textbf{int} bValue = b.get(i);}
+            \myAlgTableRow{1}{\ \ \ \ \ \ result += aValue * bValue;}
+            \myAlgTableRow{}{\ \ \ \ \}}
+            \myAlgTableRow{}{\ \ \ \ \textbf{return} result;}
+            \myAlgTableRow{}{\ \ \}}
+            \myAlgTableRow{}{\}}
+        \end{myAlgTable}
+        
+        Für den Aufwand der \texttt{ArrayList}-Methoden gilt folgender Auszug aus
+        der \acUrlFootnote{https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ArrayList.html}{Javadoc}:
+        \begin{quote}
+            The \texttt{size}, \texttt{isEmpty}, \texttt{get} \textelp{} operations run in constant time.
+            \textelp{} All of the other operations run in linear time (roughly speaking).
+        \end{quote}
+    
+    \item
+        \begin{myAlgTable}{5}
+            \myAlgTableRow{}{\textbf{void} compress(\textbf{LinkedList}<\textbf{Integer}> l) \{}
+            \myAlgTableRow{1}{\ \ \textbf{int} n = l.size();}
+            \myAlgTableRow{1}{\ \ \textbf{if} (n == 1)}
+            \myAlgTableRow{}{\ \ \ \ \textbf{return};}
+            \myAlgTableRow{}{}
+            \myAlgTableRow{1}{\ \ \textbf{int} element = l.removeFirst();}
+            \myAlgTableRow{}{\ \ compress(l);}
+            \myAlgTableRow{}{}
+            \myAlgTableRow{1}{\ \ \textbf{if} (l.getFirst() != element)}
+            \myAlgTableRow{1}{\ \ \ \ l.addFirst(element);}
+            \myAlgTableRow{}{\}}
+        \end{myAlgTable}
+        
+        Für den Aufwand der \texttt{LinkedList}-Methoden macht die \acUrlFootnote{https://docs.oracle.com/javase/7/docs/api/java/util/LinkedList.html}{Javadoc} lediglich folgende Aussage:
+        \begin{quote}
+            All of the operations perform as could be expected for a doubly-linked list.
+            Operations that index into the list will traverse the list from the beginning or the end, whichever is closer to the specified index.
+        \end{quote}
+        Es handelt sich also um eine gewöhnliche doppelte verknüpfte Liste, wobei die \texttt{LinkedList}-Klasse stets eine Referenz auf das aktuell erste und letzte Element der Liste hält.
+        Die offensichtliche Optimierung einen Zähler über die aktuelle Anzahl an Elementen zu verwalten, damit dafür nicht jedesmal die ganze Liste traversiert werden muss, ist zusätzlich seit jeher im JDK implementiert.
+\end{itemize}
+\let\arraystretch\oldarraystretch
+
+\clearpage
+Bestimmen Sie die Laufzeit der gebenen Algorithmen mit folgenden Schritten:
+
+\begin{enumerate}
+    \item
+        \acTask[0.5 Punkte pro Algorithmus]{2.5}:
+        Schreiben Sie links in die Platzhalter die \emph{kleinste obere Schranke} für die Laufzeit der jeweiligen Zeile hinein.
+        Für \texttt{if}-Abfragen soll der Aufwand der Bedingungen angegeben werden; für Schleifen, die Anzahl der Schleifendurchläufe (ohne Beachtung von äußeren Schleifen).
+    
+        \acNote:
+        Die auszufüllenden Laufzeiten sind nicht immer zwangsweise von \texttt{n} abhängig.
+        
+        \acNote:
+        Geben Sie eine Laufzeit von $\mathcal{O}(\infty)$ an, falls etwas nicht terminiert.
+        Falls ein einzelner Teil (bzw. eine Schleife) eines Algorithmus nicht terminiert, sind trotzdem die Laufzeiten für alle anderen Zeilen (auch Zeilen innerhalb der Schleife) anzugeben!
+        
+        \begin{acSolution}
+            Lösung direkt in den jeweiligen Feldern der Algorithmen eingetragen.
+        \end{acSolution}
+    
+    \item\label{subtask:receq}
+        \acTask[0.5 Punkte pro Algorithmus]{2.5}:
+        Geben Sie die kleinste obere Schranke der Gesamtlaufzeit für jeden Algorithmus in $\mathcal{O}$-Notation an.
+        Für die rekursiven Algorithmen genügt es die korrekte Rekursionsgleichung aufzustellen.
+        
+        \begin{acSolution}
+            \begin{itemize}
+                \item\textbf{Algorithmus 1}:
+                    Der Gesamtaufwand ist $\mathcal{O}(n^2\,\log\,n)$.
+                    
+                \item\textbf{Algorithmus 2}:
+                    Der Gesamtaufwand ist $\mathcal{O}(\infty)$ bzw. der Algorithmus terminiert nicht.
+                    
+                \item\textbf{Algorithmus 3}:
+                    Der Gestamtaufwand ist $\mathcal{O}(n^2)$, weil \texttt{g} folgendermaßen aufgerufen wird:
+                    \begin{equation*}
+                        \texttt{g(1) g(2) g(4) g(8) \dots\ g(n/4) g(n/2) g(n)}
+                    \end{equation*}
+                    Da der Aufwand von $g$ linear ist, kann der Aufwand der \texttt{for}-Schleife mit der geometrischen Reihe abgeschätzt werden:
+                    \begin{equation*}
+                        \mathcal{O}\left(n \sum_{k=0}^\infty \left(\frac{1}{2}\right)^k\right)
+                        = \mathcal{O}\left(n\,\frac{1}{1 - \frac{1}{2}}\right)
+                        = \mathcal{O}(2\,n)
+                        = \mathcal{O}(n)
+                    \end{equation*}
+                    Ein Gesamtaufwand von $\mathcal{O}(n^2\,\mathrm{log}\,n)$ zählt in dieser Aufgabe als falsch, da dies nicht die kleinste obere Schranke ist.
+                    
+                \item\textbf{Algorithmus 4}:
+                    Für den Gesamtaufwand gilt folgende Rekursionsgleichung:
+                    \begin{align*}
+                        T(n,m) &= \begin{cases}
+                            \mathcal{O}(1) & \text{if $n = 0$} \\
+                            \mathcal{O}(n + m) + T(n-1,m) & \text{if $n \neq 0$} \\
+                        \end{cases}
+                    \end{align*}
+                    
+                \item\textbf{Algorithmus 5}:
+                    Für den Gesamtaufwand gilt folgende Rekursionsgleichung:
+                    \begin{align*}
+                        T(n) &= \begin{cases}
+                            \mathcal{O}(1) & \text{if $n=1$} \\
+                            \mathcal{O}(1) + T(n-1) & \text{if $n \neq 1$} \\
+                        \end{cases}
+                    \end{align*}
+            \end{itemize}
+        \end{acSolution}
+    
+    \item
+        \acTask[0.5 Punkte pro rekursivem Algorithmus]{1}:
+        Lösen Sie die Rekursionsgleichung aus \cref{subtask:receq} zu jeweils einem geschlossenen, nicht-rekursiven Term.
+        
+        \acNote:
+        Für die hier vorkommenden Rekursionsgleichung kann man die Lösung \emph{sehen}.
+        Eine Berechnung via Induktion oder Master-Theorem ist nicht nötig.
+        
+        \begin{acSolution}
+            \begin{itemize}
+                \item \textbf{Algorithmus 4}: $T(n, m) = \mathcal{O}(n\,(n + m))$.
+                \item \textbf{Algorithmus 5}: $T(n) = \mathcal{O}(n)$.
+            \end{itemize}
+        \end{acSolution}
+\end{enumerate}
+
+
+% ------------------------------------------------------------------------------
+\section{Hinweise zur Abgabe}
+\label{sec:submission-notes}
+
+Bitte lesen Sie folgende Hinweise zur Abgabe Ihrer Lösungen sorgfältig.
+\textbf{Nichtbeachtung führt zum Verlust von 50\% der erlangten Punkte} des jeweiligen Blattes.
+
+\begin{itemize}
+    \item Lösungen sind über folgendes SVN-Repository einzureichen:
+    
+        \url{https://svn.uni-koblenz.de/westteaching/aud-ws1920/<groupname>}
+        
+        wobei \texttt{<groupname>} durch den Namen Ihrer Abgabegruppe zu ersetzen ist.
+    
+    \item Lösungen für Übungsblatt \textbf{X} sind im Ordner \texttt{solutions/assignment\textbf{X}} abzulegen.
+        Erstellen Sie einen Unterordner \texttt{task\textbf{Y}} für \emph{jede} Aufgabe \textbf{Y} auf dem Übungsblatt.
+        Lösungen zu theoretischen Aufgaben werden nur im PDF-Format akzeptiert.
+        Für Programmieraufgaben reichen Sie bitte einerseits \texttt{.java}-Dateien ein, hierbei jedoch nur die, die von Ihnen erstellt oder angepasst wurden.
+        Reichen Sie bitte jede \texttt{.java}-Datei zusätzlich noch im PDF-Format ein.%
+        \footnote{Diese wird während der Korrektur genutzt um einfach Anmerkungen an bestimmten Stellen im Code machen zu können.}
+        Erstellen Sie im SVN keine Unterordner pro Java-Package oder vergleichbarem.
+        
+        Beispielsweise sollte Ihre Verzeichnisstruktur für Aufgabenblatt 0, wobei Aufgabe~1 theoretisch ist und Aufgabe~2 einen Theorie- und einen Programmier-Teil hat, zu dessen Lösung Sie eine Klasse \texttt{Soldier.java} erstellt haben, folgendermaßen aussehen:
+        
+        \texttt{solutions/\\
+        \phantom{xx}assignment0/\\
+        \phantom{xxxx}task1/\\
+        \phantom{xxxxxx}solution-task1.pdf\\
+        \phantom{xxxx}task2/\\
+        \phantom{xxxxxx}solution-task2.pdf\\
+        \phantom{xxxxxx}Soldier.java\\
+        \phantom{xxxxxx}Soldier.pdf}
+        
+        Verwenden Sie keine Umlaute, Leer- oder Sonderzeichen in Ordner- oder Dateinamen.
+    
+    \item Jede abgegebene Datei soll dabei Ihren Gruppennamen und die Namen aller, an der Bearbeitung dieses Übungsblatts beteiligten Studenten, aufweisen.
+        Nur namentlichen genannte Gruppenmitglieder erhalten Punkte für die jeweilige Aufgabe!
+    
+    \item Die Korrektur Ihrer Abgaben finden Sie im Ordner \texttt{corrections/}.
+    
+    \item Den Ordner \texttt{workspace/} können Sie nach Belieben, zur Koordination in Ihrer Gruppe während der Erstellung der Lösung, nutzen.
+    
+    \item Mit der Abgabe Ihrer Lösung bestätigen Sie, dass Sie das Übungsblatt selbstständig bearbeitet haben, ohne fremde geistige Leistung zu beanspruchen.
+        Sollte die Situation eintreten, dass Abgaben verschiedener Gruppen identisch sind, erhalten \emph{alle} beteiligten Gruppen keine Punkte für diese Aufgabe.
+    
+    \item Es werden nur Programme, die in Java implementiert sind, berücksichtigt.
+        Achten Sie darauf, dass Ihre Programme ohne Fehler und Warnung kompiliert werden können.
+        Testen Sie dies auf einem Computer, der nicht zu Erstellung Ihrer Lösung verwendet wurde!
+        Falls benötigt, dürfen Sie beliebige weitere \texttt{.java}-Dateien erstellen.
+        Formattieren Sie Ihren Code lesbar und kommentieren Sie ihn ausreichend.
+        Verwenden Sie UTF-8 als Kodierung bei \texttt{.java}-Dateien.
+        Falls Testfälle bereitgestellten werden, nutzen Sie diese zur Verifikation Ihrer Lösung.
+        Das bestehen alle bereitgestellten Testfälle ist ein \emph{notwendiges} Kriterium zum Erreichen der vollen Punktzahl, kein \emph{hinreichendes}!
+    
+    \clearpage
+    \item Um ein Maven-Projekt in IntelliJ zu importieren:
+        
+        \begin{enumerate}
+            \item \texttt{Import Project} im Projekt-Auswahl-Fenster wählen.
+            \item Zu Ordner navigieren, der die \texttt{pom.xml} enthält.
+            \item \texttt{Import projects from external model} und \texttt{Maven} auswählen.
+            \item Die Standard-Projektkonfiguration mittels \texttt{Next} akzeptieren.
+            \item Sicherstellen, dass genau ein Projekt gefunden wurde, und \texttt{Next} auswählen.
+            \item Ein JDK mit Version $\geq$ 11 auswählen und mit \texttt{Next} bestätigen.
+                (Hier kann es zu Probleme kommen, wenn eine andere als die, in Ihrem Betriebssystem konfigurierte, JDK-Version ausgewählt wird.)
+            \item Die Konfiguration mittels \texttt{Finish} abschließen.
+        \end{enumerate}
+    
+        Um nun eine Testklasse auszuführen, Rechtsklick auf die entprechende \texttt{.java}-Datei und \texttt{Run '<class name>'} auswählen.
+    
+    \item Um ein Maven-Projekt in Eclipse zu importieren:
+    
+        \begin{enumerate}
+            \item \texttt{File} im Fenstermenü auswahlen.
+            \item \texttt{Import...} auswählen.
+            \item \texttt{Existing Maven Projects} in der Kategorie \texttt{Maven} auswählen.
+            \item \texttt{Browse...} auswählen und zum Ordner navigieren, der die \texttt{pom.xml} enthält.
+            \item Die Konfiguration mittels \texttt{Finish} abschließen.
+        \end{enumerate}
+        
+        Um nun eine Testklasse auszuführen, Rechtsklick auf die entprechende \texttt{.java}-Datei und erst \texttt{Run As} und dann \texttt{JUnit Test} auswählen.
+\end{itemize}
+
+\end{document}

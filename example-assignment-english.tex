@@ -1,0 +1,374 @@
+%% example-assignment-english.tex
+%% Copyright 2021 Lukas Schmelzeisen
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The current maintainer of this work is Lukas Schmelzeisen.
+%
+% This work consists of the files acAssignment.cls and acAssignment.tex and
+% bundled example files.
+
+
+% Enable warnings about problematic code
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[solution]{acAssignment}
+
+% Parse this file as UTF-8 (included in LaTeX by default since 2018 but included
+% here for backwards-compatibility). If you use something else, change this.
+\usepackage[utf8]{inputenc}
+
+\acIfSolution{
+    \usepackage{tikz, forest}
+}{}
+
+\acCourse[https://ilias3.uni-stuttgart.de/goto_Uni_Stuttgart_crs_2120363.html]
+    {Introduction to Artificial Intelligence}
+\acSemester{WS~20/21}
+\acAssignmentNumber{3}
+\acAssignmentTitle{Probabilistic Logic and First-order Logic}
+
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Potyka-00001/]%
+    {Dr. Nico Potyka}{nico.potyka@ipvs.uni-stuttgart.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Kumar-00006/]%
+    {Dr. Chandan Kumar}{chandan.kumar@ipvs.uni-stuttgart.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Kraemer/]%
+    {Teresa Krämer}{teresa.krämer@ipvs.uni-stuttgart.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Iurshina/]%
+    {Anastasiia Iurshina}{anastasiia.iurshina@ipvs.uni-stuttgart.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Schmelzeisen/]%
+    {Lukas Schmelzeisen}{lukas.schmelzeisen@ipvs.uni-stuttgart.de}
+\acAuthor[https://www.ipvs.uni-stuttgart.de/institute/team/Sengupta-00002/]%
+    {Korok Sengupta}{korok.sengupta@ipvs.uni-stuttgart.de}
+
+\begin{document}
+\maketitle
+
+This assignment sheet consists of \acNumPages~pages with the following \acNumTasks~tasks:
+
+\acListOfTasks
+
+Submit your solution in ILIAS as a single PDF file.%
+\footnote{Your drawing software probably allows to export as PDF.
+    An alternative option is to use a PDF printer.
+    If you create multiple PDF files, use a merging tool (like \href{https://github.com/pdfarranger/pdfarranger}{pdfarranger}) to combine the PDFs into a single file.}
+Make sure to list your full name and immatriculation number at the start of the file.
+Optionally, you can \emph{additionally} upload source files (e.g. PPTX files).
+Remember to fill out the exercise slot and exercise presentation polls linked in ILIAS.
+If you have any questions, feel free to ask them in the excercise forum in ILIAS.
+
+\textbf{Submission is open until Saturday, 5~December 2020, 23:59.}
+
+% ------------------------------------------------------------------------------
+\section{Practice applying theory and analytical thinking}
+
+\begin{enumerate}
+    \item \acTask[2 and 3 points]{5}:
+        Use the definition of logical equivalence to prove the following equivalences analogous to the proofs of commutativity and implication elimination on the slides:
+        \begin{enumerate}
+            \item Double negation
+            
+                \begin{acSolution}
+                    \begin{align}
+                        \mathrm{Mod}(\lnot \lnot F)
+                            &= \{I \in \mathrm{Int}(\Sigma) \mid I ~\mathrm{satisfies}~ \lnot \lnot F\} \\
+                            &= \{I \in \mathrm{Int}(\Sigma) \mid I ~\mathrm{falsifies}~ \lnot F\} \\
+                            &= \{I \in \mathrm{Int}(\Sigma) \mid I ~\mathrm{satisfies}~ F\} \\
+                            &= \mathrm{Mod}(F)
+                    \end{align}
+                \end{acSolution}
+            
+            \item Contraposition
+            
+                \begin{acSolution}
+                    \begin{align}
+                        \mathrm{Mod}(A \to B)
+                            &= \{I \in \mathrm{Int}(\Sigma) \mid I ~\mathrm{falsifies}~ A ~\mathrm{or}~ I ~\mathrm{satisfies}~ B\} \\
+                            &= \{I \in \mathrm{Int}(\Sigma) \mid I ~\mathrm{falsifies}~ \lnot B ~\mathrm{or}~ I ~\mathrm{satisfies}~ \lnot B\} \\
+                            &= \mathrm{Mod}(\lnot B \to \lnot A)
+                    \end{align}
+                \end{acSolution}
+        \end{enumerate}
+        
+    \item \acTask{5}:
+        Use the deduction theorem, biimplication elimination and the relationship between logical equivalence and logical consequence to explain the following fact: $F \equiv G$ if and only if $F \leftrightarrow G$ is a tautology.
+        
+        \begin{acSolution}
+            We have $F \equiv G$\\
+            iff $F \models G$ and $G \models F$ (follows immediately from definitions, see lecture)\\
+            iff $F \to G$ is a tautology and $G \to F$ is a tautology (deduction theorem)\\
+            iff $F \leftrightarrow G$ is a tautology (biimplication elimination).
+        \end{acSolution}
+        
+    \item The \enquote{contraposition} of a statement \enquote{If A, then B} is the statement \enquote{If not B, then not A}.
+    
+        \acTask[1 and 2 Points]{3}: Form the contrapositions of the following statements:
+        
+        \begin{enumerate}
+            \item If $x$ is a local minimum, then the gradient at $x$ is zero.
+            
+                \begin{acSolution}
+                    If the gradient at $x$ is not $0$, then $x$ is not a local minimum.
+                \end{acSolution}
+            
+            \item If all costs are bounded from below by a positive constant and the heuristic is admissible, then A*~search stops with an optimal solution.
+            
+                \begin{acSolution}
+                    If A*~search does not stop with an optimal solution, then not all costs are bounded from below by a positive constant or the heuristic is not admissible.
+                \end{acSolution}
+        \end{enumerate}
+        
+    \acIfSolution{\clearpage}{}
+    \item Consider the knowledge base $\mathcal{K} = \{A \to \lnot B, B \land C \to A, \lnot A \to C, \lnot C \to \lnot A\}$.
+    
+        \begin{enumerate}
+            \item \acTask{4}: Represent $\mathcal{K}$ by a formula in CNF.
+            
+                \begin{acSolution}
+                    We first rewrite the knowledge base equivalently as the conjunction of its elements:
+                    
+                    \begin{equation}
+                        (A \to \lnot B) \land (B \land C \to A) \land (\lnot A \to C) \land (\lnot C \to \lnot A).
+                    \end{equation}
+                    
+                    By applying the implication elimination, De Morgan's laws and double negation, the implications can be turned into disjunctions:
+                    
+                    \begin{equation}
+                        (\lnot A \lor \lnot B) \land (\lnot B \lor \lnot C \lor A) \land (A \lor C) \land (C \lor \lnot A).
+                    \end{equation}
+                    
+                    The resulting formula is a conjuncation of disjunctions and thus in CNF.
+                \end{acSolution}
+            
+            \item \acTask{2}: Represent $\mathcal{K}$ in clause form.
+            
+                \begin{acSolution}
+                    To represent the formula in clause form, we simply replace every disjunction with a clause:
+                    
+                    \begin{equation}
+                        \big\{ \{\lnot A, \lnot B\}, \{\lnot B, \lnot C, A\}, \{A, C\}, \{C, \lnot A\} \big\}.
+                    \end{equation}
+                \end{acSolution}
+            
+            \item \acTask{2}: Which clauses are definite clauses?
+            
+                \begin{acSolution}
+                    The clauses $\{\lnot B, \lnot C, A\}$ and $\{C, \lnot A\}$ are definite clauses.
+                \end{acSolution}
+            
+            \item \acTask{2}: Which clauses are goal clauses?
+            
+                \begin{acSolution}
+                    The clause $\{\lnot A, \lnot B\}$ is a goal clause.
+                \end{acSolution}
+            
+            \item \acTask{2}: Which clauses are Krom clauses?
+            
+                \begin{acSolution}
+                    The clauses $\{\lnot A, \lnot B\}$, $\{A, C\}$, and $\{C, \lnot A\}$ are Krom clauses.
+                \end{acSolution}
+        \end{enumerate}
+\end{enumerate}
+
+% ------------------------------------------------------------------------------
+\section{Resolution with Clause Graphs}
+
+\begin{enumerate}
+    \item Consider the following clauses:
+    
+        \begin{itemize}
+           \item $\{B\}$,
+           \item $\{A, B\}$,
+           \item $\{C, F\}$,
+           \item $\{\lnot D, F\}$,
+           \item $\{\lnot C, D\}$,
+           \item $\{\lnot C, E\}$,
+           \item $\{\lnot E, F\}$,
+           \item $\{\lnot A, \lnot B, C\}$.
+        \end{itemize}
+        
+        \acTask{9}:
+        Use a presentation software like Powerpoint or Libre Office Impress to draw the clause graph.
+    
+    \item \acTask{3}:
+        Perform a resolution step that allows you to apply the isolation rule.
+        Draw the new graph (just copy the previous one and adapt it) and explain what you did.
+    
+    \item \acTask{3}:
+        Perform a resolution step that allows you to delete a tautology.
+        Draw the new graph (just copy the previous one and adapt it) and explain what you did.
+\end{enumerate}
+
+\begin{acSolution}
+    Solution missing, as I did not want to take the time to typeset it in TikZ.
+\end{acSolution}
+
+% ------------------------------------------------------------------------------
+\section{Resolution with Restrictions}
+
+\begin{enumerate}
+    \item Consider the following clauses:
+        
+        \begin{itemize}
+            \item $\{B\}$,
+            \item $\{\lnot D\}$,
+            \item $\{\lnot C, D\}$,
+            \item $\{\lnot A, \lnot B, C\}$.
+        \end{itemize}
+        
+        \acTask{9}:
+        Use resolution to prove by contradiction that the clauses entail $\lnot A$.
+        Use a presentation software like Powerpoint or Libre Office Impress to draw the derivation of the empty clause similar to what you have seen on the slides.
+        
+        \begin{acSolution}
+            For proof by contradiction, add $\lnot \lnot A \equiv A$ to the knowledge base.
+            
+            \begin{center}
+                \begin{forest}
+                    for tree={
+                        grow'=90,
+                        parent anchor=north,
+                        math content,
+                        before typesetting nodes={
+                            if level=0{}{
+                                if content={}
+                                    {shape=coordinate}
+                                    {content/.wrap value={\{#1\}}}}}}
+                    [{\emptyset}
+                        [
+                            [
+                                [
+                                    [{A}]]]]
+                        [{\lnot A}
+                            [
+                                [
+                                    [{B}]]]
+                            [{\lnot A, \lnot B}
+                                [{\lnot C}
+                                    [{\lnot D}]
+                                    [{\lnot C, D}]]
+                                [
+                                    [{\lnot A, \lnot B, C}]]]]]
+                \end{forest}
+            \end{center}
+        \end{acSolution}
+    
+    \item \acTask{3}:
+        Is your proof a resolution proof?
+        Explain why or why not?
+        
+        \begin{acSolution}
+            The proof is a linear resolution proof because every center clause is derived from the last center clause and every side clause is an input clause.
+        \end{acSolution}
+        
+    \item \acTask{3}:
+        Is your proof an input resolution proof? Explain why or why not.
+        
+        \begin{acSolution}
+            The proof is also an input resolution proof because every resolution step involves an input clause.
+        \end{acSolution}
+\end{enumerate}
+
+% ------------------------------------------------------------------------------
+\section{First-order Basics}
+
+Consider a first-order signature with function symbols $\{\mathrm{alice, \mathrm{bob}, \mathrm{charles}, \mathrm{donald}, \mathrm{best\_friend}}\}$, where $\mathrm{alice}$, $\mathrm{bob}$, $\mathrm{charles}$, and $\mathrm{donald}$ are constants and $\mathrm{best\_friend}$ is a function symbol with arity $1$.
+It contains the predicate symbols $\{\mathrm{rich}, \mathrm{knows}, \mathrm{equal}\}$, where $\mathrm{rich}$ is an unary and $\mathrm{knows}$ and $\mathrm{equals}$ are binary predicate symbols.
+Consider the interpretation $\mathcal{I}$ with
+
+\begin{itemize}
+    \item $\mathcal{U}^\mathcal{I} = \{\mathrm{AliceCarroll}, \mathrm{BobBurns}, \mathrm{DonaldDuck}\}$,
+    \item $\mathrm{alice}^\mathcal{I} = \mathrm{AliceCarroll}$,
+    \item $\mathrm{bob}^\mathcal{I} = \mathrm{BobBurns}$,
+    \item $\mathrm{charles}^\mathcal{I} = \mathrm{BobBurns}$,
+    \item $\mathrm{donald}^\mathcal{I} = \mathrm{DonaldDuck}$,
+    \item $\mathrm{best\_friend}^\mathcal{I}(\mathrm{AliceCarroll}) = \mathrm{DonaldDuck}$,
+    \item $\mathrm{best\_friend}^\mathcal{I}(\mathrm{DonaldDuck}) = \mathrm{AliceCarroll}$,
+    \item $\mathrm{best\_friend}^\mathcal{I}(\mathrm{BobBurns}) = \mathrm{BobBurns}$,
+    \item $\mathrm{rich}^\mathcal{I} = \{\mathrm{DonaldDuck}\}$,
+    \item $\mathrm{knows}^\mathcal{I} = \{(\mathrm{AliceCarroll}, \mathrm{DonaldDuck}), (\mathrm{DonaldDuck}, \mathrm{AliceCarroll})\}$,
+    \item $\mathrm{equals}^\mathcal{I} = \{(e, e) \mid e \in \mathcal{U}^\mathcal{I}\}$.
+\end{itemize}
+    
+\vspace{0.4cm}
+\begin{enumerate}
+    \item \acTask[1 Point each]{5}:
+        Which of the following formulas is satisfied/falsified by $\mathcal{I}$?
+        (A short answer is sufficient, but you should be able to explain it in detail in the live exercise.)
+        
+        \begin{itemize}
+            \item $\mathrm{equal}(\mathrm{best\_friend}(\mathrm{charles}), \mathrm{charles})$
+            
+                \begin{acSolution}
+                    We have $\mathcal{I} \models \mathrm{equal}(\mathrm{best\_friend}(\mathrm{charles}), \mathrm{charles})$ iff
+                    
+                    \begin{equation}
+                        (\mathrm{best\_friend}^\mathcal{I}(\mathrm{charles}^\mathcal{I}), \mathrm{charles}^\mathcal{I}) \in \mathrm{equals}^\mathcal{I}.
+                    \end{equation}
+                    
+                    We have
+                    
+                    \begin{itemize}
+                        \item $\mathrm{charles}^\mathcal{I} = \mathrm{BobBurns}$,
+                        \item $\mathrm{best\_friend}^\mathcal{I}(\mathrm{BobBurns}) = \mathrm{BobBurns}$, and
+                        \item $(\mathrm{BobBurns}, \mathrm{BobBurns}) \in \mathrm{equals}^\mathcal{I}$.
+                    \end{itemize}
+                    
+                    Hence, $\mathcal{I} \models \mathrm{equal}(\mathrm{best\_friend}(\mathrm{charles}), \mathrm{charles})$.
+                \end{acSolution}
+            \item $\mathrm{equal}(\mathrm{best\_friend}(\mathrm{bob}), \mathrm{charles})$
+            
+                \begin{acSolution}
+                    Similarly, we have $\mathcal{I} \models \mathrm{equal}(\mathrm{best\_friend}(\mathrm{bob}), \mathrm{charles})$.
+                \end{acSolution}
+            
+            \item $\mathrm{equal}(\mathrm{best\_friend}(\mathrm{alice}), \mathrm{bob})$
+            
+                \begin{acSolution}
+                    $\mathcal{I}$ falsifies $\mathrm{equal}(\mathrm{best\_friend}(\mathrm{alice}), \mathrm{bob})$ because $\mathrm{bob}^\mathcal{I} = \mathrm{BobBurns}$ while $\mathrm{best\_friend}^\mathcal{I}(\mathrm{alice}^\mathcal{I}) = \mathrm{best\_friend}^\mathcal{I}(\mathrm{AliceCarrol}) = \mathrm{DonaldDuck}$ and $(\mathrm{DonaldDuck}, \mathrm{BobBurns}) \notin \mathrm{equal}^\mathcal{I}$.
+                \end{acSolution}
+                
+            \item $\forall x \, \forall y \, (\mathrm{knows}(x, y) \to \mathrm{knows}(y, x))$
+            
+                \begin{acSolution}
+                    The premise $\mathrm{knows}(x, y)$ of the implication is only satisfied for $\mathrm{AliceCarroll}$ and $\mathrm{DonaldDuck}$ and, in this case, $\mathrm{knows}(y, x)$ is true as well.
+                    Therefore, the formula is satisfied.
+                \end{acSolution}
+            
+            \item $\exists x \,\big(\lnot \mathrm{knows}(x, \mathrm{best\_friend}(x))\big)$
+            
+                \begin{acSolution}
+                    The literal is satisfied for $\mathrm{BobBurns}$, so the existential statement is satisfied and $\mathcal{I}$ satisfies the formula.
+                \end{acSolution}
+        \end{itemize}
+        
+    \item \acTask{5}:
+        Define another interpretation with at least 4 elements in the universe and interpret every predicate symbol by a non-empty set.
+        
+        \begin{acSolution}
+            \begin{itemize}
+                \item $\mathcal{U}^\mathcal{I} = \{a, b, c, d\}$
+                \item $\mathrm{alice}^\mathcal{I} = a$,
+                \item $\mathrm{bob}^\mathcal{I} = b$,
+                \item $\mathrm{charles}^\mathcal{I} = c$,
+                \item $\mathrm{donald}^\mathcal{I} = d$,
+                \item $\mathrm{best\_friend}^\mathcal{I}(a) = a$,
+                \item $\mathrm{best\_friend}^\mathcal{I}(b) = b$,
+                \item $\mathrm{best\_friend}^\mathcal{I}(c) = c$,
+                \item $\mathrm{best\_friend}^\mathcal{I}(d) = d$,
+                \item $\mathrm{rich}^\mathcal{I} = \{x \mid x \in \mathcal{U}^\mathcal{I}\}$,
+                \item $\mathrm{knows}^\mathcal{I} = \{(x,y) \mid (x, y) \in \mathcal{U}^\mathcal{I} \times \mathcal{U}^\mathcal{I}\}$,
+                \item $\mathrm{equals}^\mathcal{I} = \{(x, x) \mid x \in \mathcal{U}^\mathcal{I}\}$.
+            \end{itemize}
+        \end{acSolution}
+\end{enumerate}
+
+\end{document}

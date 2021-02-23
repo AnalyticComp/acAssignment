@@ -1,0 +1,150 @@
+%% example-exam-german.tex
+%% Copyright 2021 Lukas Schmelzeisen
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The current maintainer of this work is Lukas Schmelzeisen.
+%
+% This work consists of the files acAssignment.cls and acAssignment.tex and
+% bundled example files.
+
+
+% Enable warnings about problematic code
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[exam, sectionseven, german]{acAssignment}
+
+% Parse this file as UTF-8 (included in LaTeX by default since 2018 but included
+% here for backwards-compatibility). If you use something else, change this.
+\usepackage[utf8]{inputenc}
+
+\acCourse[https://west.uni-koblenz.de/studying/ws1819/datenbanken]
+    {Grundlagen der Datenbanken}
+\acSemester{WS~18/19}
+\acExamType{Hauptklausur} % Alternativ "Nachklausur" oder "Probeklausur"
+\acExamDate{27. Februar 2019}
+
+\acAuthor[https://west.uni-koblenz.de/de/about-us/team/claudia-schon]
+    {Dr. Claudia Schon}{schon@uni-koblenz.de}
+\acAuthor[https://west.uni-koblenz.de/de/about-us/team/daniel-janke]
+    {Daniel Janke}{danijank@uni-koblenz.de}
+
+\begin{document}
+\maketitle
+
+\acExamForm
+
+\begin{itemize}[itemsep=0pt]
+    \item Prüfen Sie, ob Ihr Klausurexemplar vollständig ist (\acNumPages~Seiten, \acNumTasks~Aufgaben).
+    \item Verwenden Sie ein dokumentenechtes Schreibmedium, am besten Kugelschreiber.
+        Schreiben Sie \emph{nicht} mit Bleistift.
+    \item Die Nutzung von Hilfsmitteln jeglicher Art ist \emph{nicht gestattet}.
+        Dies umfasst Taschenrechner, Mobiltelefone, Bücher, Notizen und vergleichbares.
+    \item Sofern möglich, geben Sie Ihre Antworten bitte auf dem jeweiligen Aufgabenblatt an.
+        Bei Bedarf können Sie weitere Blätter anfordern (3 sind bereits mit dieser Klausur am Ende gebündelt).
+        Beschriften Sie diese mit Namen, Matrikel- und Aufgabennummer und referenzieren Sie diese vom jeweiligen Aufgabenblatt.
+    \item Mit der Teilnahme an dieser Prüfung versichern Sie, dass Sie die Zulassungsvorraussetzungen für diese Prüfung erfüllen.
+        Falls diese nicht erfüllt sind, wird die Prüfung als nicht abgelegt gewertet.
+\end{itemize}
+
+\vspace{0.1cm}
+\textbf{Viel Erfolg!}
+
+\vfill
+
+\acNote:
+Diese Klausur enthält keine Aufgaben, sondern wurde nur zum Testen erstellt.
+
+% ==============================================================================
+\part{Ohne Hilfsmittel}
+Die folgenden Aufgaben müssen ohne Hilfsmittel bewältigt werden.
+
+% ------------------------------------------------------------------------------
+\section{Wissensfragen}
+\acTask{1}
+
+\subsection{Anfragesprachen}
+\subsection{Indizes}
+\subsection{Entwurfstheorie}
+\subsection{Relationales Datenmodell}
+\subsection{Modellierung}
+
+% ------------------------------------------------------------------------------
+\section{Modellierung}
+\acTask{12}
+
+% ------------------------------------------------------------------------------
+\section{Relationale Entwurfstheorie}
+\label{sec:rel-theorie}
+Ein Verweis auf \cref{sec:rel-theorie}.
+
+\subsection{Kandidatenschlüssel}
+\label{subsec:candidatekey}
+Ein Verweis auf \cref{subsec:candidatekey}.
+
+\acTask{1}
+
+\subsection{Normalformen}
+\acTask{2.3}
+
+\acTask{1.5}
+
+\subsection{Synthesealgorithmus}
+\acTask{12}
+
+% ------------------------------------------------------------------------------
+\section{SQL}
+
+\subsection{Schuldirektion}
+\acTask{3}
+
+\subsection{Lehrervertretung}
+\acTask{4}
+
+\subsection{Bestenklasse}
+\acTask{5}
+
+% ------------------------------------------------------------------------------
+\section{Logische Optimierung}
+\acTask{10}
+
+% ==============================================================================
+\part{}
+Auch für diesen Teil dürfen Sie keine Hilfsmittel verwenden.
+Er dient nur als Beispiel für Klausuren mit mehreren Teilen.
+
+% ------------------------------------------------------------------------------
+\section{Kalküle \& Relationale Algebra}
+
+\subsection{Muttersöhnchen}
+\acTask{4}
+
+\subsection{Backkönige}
+\acTask{3}
+
+\subsection{Buddies}
+\acTask{5}
+
+\subsection{Einseitige Ernährung}
+\acTask{4}
+
+% ------------------------------------------------------------------------------
+\section{Erweiterbares Hashing}
+
+\subsection{Hashing}
+\acTask{4}
+
+\subsection{Einfügen}
+\acTask{8}
+
+\acBlankPages{3}
+
+\end{document}
