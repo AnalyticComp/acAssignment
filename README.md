@@ -36,7 +36,7 @@ The latest version of this license is in http://www.latex-project.org/lppl.txt a
 
 This work has the LPPL maintenance status “maintained”.
 
-The current naintainer of this work is Lukas Schmelzeisen.
+The current maintainer of this work is Lukas Schmelzeisen.
 
 This work consists of the files acAssignment.cls and acAssignment.tex and bundled example files.
 
