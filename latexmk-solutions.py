@@ -10,6 +10,7 @@ PATTERN = re.compile(
 for tex_file in Path(".").iterdir():
     if (
         not tex_file.name.endswith(".tex") or
+        tex_file.name.endswith("-solution.tex") or
         tex_file.name == "acAssignment.tex"
     ):
         continue
@@ -31,9 +32,15 @@ for tex_file in Path(".").iterdir():
     options.append("solution")
     options_str = ", ".join(options)
 
-    contents_solution = PATTERN.sub(
-        rf"\\documentclass[{options_str}]{{acAssignment}}", contents
-    )
+    documentclass_str = rf"\\documentclass[{options_str}]{{acAssignment}}"
+    contents_solution = PATTERN.sub(documentclass_str, contents)
+
+    if (
+        tex_file_solution.exists() and
+        tex_file_solution.read_text(encoding="UTF-8") == contents_solution
+    ):
+        continue
+
     tex_file_solution.write_text(contents_solution, encoding="UTF-8")
 
 subprocess.call(["latexmk"])
