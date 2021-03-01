@@ -89,7 +89,7 @@
 
 \newtoggle{@acSolution}
 \DeclareOption{solution}{\toggletrue{@acSolution}}
-    
+
 \DeclareOption*{\ClassError{acAssignment}{Unknown option '\CurrentOption'}}
 \ProcessOptions\relax
 
@@ -300,6 +300,10 @@
 \@acLocalize\@acLocCourseOfStudy
     {Course of study (including B.\,Sc./M.\,Sc.)}
     {Studiengang (einschließlich B.\,Sc./M.\,Sc.)}
+
+\@acLocalize\@acLocSeatNumber
+    {Seat Number}
+    {Sitznummer}
 
 \@acLocalize\@acLocReviewersSignature
     {Reviewer's signature}
@@ -592,7 +596,7 @@
         {\scriptsize\vphantom{g/(}#3\par}%
     \end{minipage}}
 
-\newcommand*{\acExamForm}{%
+\newcommand*{\acExamForm}[1][]{%
     \@acAssertExam%
     \vspace{0.4cm}%
     \textbf{\@acLocStudent}%
@@ -604,12 +608,24 @@
     \@acEntryField[(\textwidth - 0.4cm)*1/3]{\@acLocImmatriculationNumber}%
     \par}%
     
-    {\hfuzz=31pt%
-    \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocEmail}%
-    \hspace{0.4cm}%
-    \@acEntryField[(\textwidth - 0.4cm)*1/3]{\@acLocCourseOfStudy}%
-    \par}%
-        
+    \ifstrempty{#1}
+        {\hfuzz=31pt%
+        \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocEmail}%
+        \hspace{0.4cm}%
+        \@acEntryField[(\textwidth - 0.4cm)*1/3]{\@acLocCourseOfStudy}%
+        \par}
+        {\ifstrequal{#1}{seat}%
+            {{\hfuzz=31pt%
+            \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocEmail}%
+            \hspace{0.4cm}%
+            \@acEntryField[(\textwidth - 0.4cm)*1/3]{\@acLocSeatNumber}%
+            \par}%
+            {\hfuzz=31pt%
+            \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocCourseOfStudy}%
+            \par}}%
+            {\ClassWarning{acAssignment}{%
+                Unkown option '#1' for \string\acExamForm.}}}%
+
     \vspace{0.4cm}%
     \textbf{\@acLocResult}%
     \vspace{-0.1cm}%

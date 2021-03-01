@@ -110,7 +110,7 @@ The latest version of this license is in \url{http://www.latex-project.org/lppl.
 
 This work has the LPPL maintenance status ``maintained''.
 
-The current naintainer of this work is Lukas Schmelzeisen.
+The current maintainer of this work is Lukas Schmelzeisen.
 
 This work consists of the files \texttt{acAssignment.cls} and \texttt{acAssignment.tex} and bundled example files.
 
@@ -309,12 +309,13 @@ A command that simply expands to the number of pages of this document.
 
 {\hfuzz=31pt
 \defCmd{acListOfTasks}{}
-Generates a hyperlinked list of all tasks (i.\,e., \refCmd{section}s with at least one \refCmd{acTask} call).
+Generates a hyperlinked list of all tasks (i.\,e., \refCmd{section}s with at least one \refCmd{acTask}).
 \par}
 
-\defCmd{acExamForm}{}
+\defCmd{acExamForm}{\oArg{options}}
 Generates a form that is typically used at the beginning of an \refOption{exam}.
 Is composed of a section where the student will have to enter their personal details and a grading table that automatically includes all tasks (i.\,e., \refCmd{section}s with at least one \refCmd{acTask} call) of the document.
+If \placeholder{options} is given it currently must be either empty for the default behavior or the exact string \texttt{seat} to include an entry for the seat number in the form of the exam.
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \subsection{Structuring Tasks}
