@@ -304,6 +304,10 @@
 \@acLocalize\@acLocSeatNumber
     {Seat Number}
     {Sitznummer}
+    
+\@acLocalize\@acLocSignature
+    {Signature}
+    {Unterschrift}
 
 \@acLocalize\@acLocReviewersSignature
     {Reviewer's signature}
@@ -609,11 +613,14 @@
     \par}%
     
     \ifstrempty{#1}
-        {\hfuzz=31pt%
+        {{\hfuzz=31pt%
         \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocEmail}%
         \hspace{0.4cm}%
         \@acEntryField[(\textwidth - 0.4cm)*1/3]{\@acLocCourseOfStudy}%
-        \par}
+        \par}%
+        {\hfuzz=31pt%
+        \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocSignature}%
+        \par}}%
         {\ifstrequal{#1}{seat}%
             {{\hfuzz=31pt%
             \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocEmail}%
@@ -622,6 +629,9 @@
             \par}%
             {\hfuzz=31pt%
             \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocCourseOfStudy}%
+            \par}%
+            {\hfuzz=31pt%
+            \@acEntryField[(\textwidth - 0.4cm)*2/3]{\@acLocSignature}%
             \par}}%
             {\ClassWarning{acAssignment}{%
                 Unkown option '#1' for \string\acExamForm.}}}%
